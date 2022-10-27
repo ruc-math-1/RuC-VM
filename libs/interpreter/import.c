@@ -730,6 +730,18 @@ void *interpreter(void *pcPnt)
 			}
 				break;
 
+			case GETC:
+			{
+				sem_wait(sempr);
+				i = mem[pc++];				// ссылка на identtab
+				prtype = identab[i + 2];
+				r = identab[i + 1] + 2;		// ссылка на reprtab
+
+				auxget(dsp(identab[i + 3], l), LCHAR);
+				sem_post(sempr);
+			}
+				break;
+
 			case ABSIC:
 				mem[x] = abs(mem[x]);
 				break;
