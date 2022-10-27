@@ -361,7 +361,7 @@
 #define PRINTID									-23
 #define PRINT									-24
 #define PRINTF									-25
-#define SCANF									-26
+#define GETC                                    -26
 #define GETID									-27
 #define TCREATEDIRECT							-28
 #define TEXITDIRECT								-29
