@@ -193,8 +193,9 @@ void auxprintf(int strbeg, int databeg)
 	int i;
 	int j;
 	int curdata = databeg + 1;
+	int strend = strbeg+mem[strbeg-1];
 
-	for (i = strbeg; mem[i] != 0; ++i)
+	for (i = strbeg; i < strend; ++i)
 	{
 		if (mem[i] == '%')
 		{
