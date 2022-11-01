@@ -2340,6 +2340,7 @@ void *interpreter(void *pcPnt)
 
 				auxfputc(ch, file);
 			}
+				break;
 			case FGETCC:
 			{
 				int file = mem[x];
@@ -2352,6 +2353,7 @@ void *interpreter(void *pcPnt)
 				int file = mem[x--];
 				auxfclose(file);
 			}
+				break;
 			default:
 				runtimeerr(wrong_kop, mem[pc - 1], numTh);
 		}
