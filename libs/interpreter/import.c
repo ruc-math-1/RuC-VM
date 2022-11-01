@@ -379,6 +379,49 @@ void auxget(int beg, int t)
 	}
 }
 
+char* rucstr_to_cstr(int* arr, int len) {
+	char* str = malloc(sizeof(len * 2 + 2));
+	int j = 0;
+
+	for(int i = 0; i < len; i++) {
+		int wchar = arr[i];
+
+		if (wchar < 128)
+		{
+			str[j++] = (char) wchar;
+		}
+		else
+		{
+			unsigned char first = (wchar >> 6) | /*0b11000000*/ 0xC0;
+			unsigned char second = (wchar & /*0b111111*/ 0x3F) | /*0b10000000*/ 0x80;
+
+			str[j++] = first;
+			str[j++] = second;
+		}
+	}
+	return str;
+}
+int auxfopen(int filename_addr, int mode_addr) {
+	int filename_len = mem[filename_addr - 1];
+	int mode_len = mem[mode_addr - 1];
+
+	int* filename0 = &(mem[filename_addr]);
+	int* mode0 = &(mem[mode_addr]);
+
+	char* filename = rucstr_to_cstr(filename0, filename_len);
+	char* mode = rucstr_to_cstr(mode0, mode_len);
+
+	//printf("Opening file %s %s\n", filename, mode);
+
+	FILE* file = fopen(filename, mode);
+
+	free(filename);
+	free(mode);
+
+	return file;
+}
+
+
 int check_zero_int(int r)
 {
 	if (r == 0)
@@ -2272,7 +2315,14 @@ void *interpreter(void *pcPnt)
 			case LOGNOT:
 				mem[x] = !mem[x];
 				break;
+			case FOPENC:
+			{
+				int mode_addr = mem[x--];
+				int filename_addr = mem[x];
 
+				mem[x] = auxfopen(filename_addr, mode_addr);
+			}
+				break;
 			default:
 				runtimeerr(wrong_kop, mem[pc - 1], numTh);
 		}
