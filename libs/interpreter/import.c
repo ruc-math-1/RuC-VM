@@ -81,6 +81,9 @@ FILE *input;
 char sem_print[] = "sem_print", sem_debug[] = "sem_debug";
 sem_t *sempr, *semdeb;
 
+FILE* files[MAXFILES];
+int file_count = 0;
+
 #ifdef ROBOT
 FILE *f1, *f2;	// файлы цифровых датчиков
 const char *JD1 = "/sys/devices/platform/da850_trik/sensor_d1";
@@ -411,17 +414,21 @@ int auxfopen(int filename_addr, int mode_addr) {
 	char* filename = rucstr_to_cstr(filename0, filename_len);
 	char* mode = rucstr_to_cstr(mode0, mode_len);
 
-	//printf("Opening file %s %s\n", filename, mode);
-
-	FILE* file = fopen(filename, mode);
+	files[file_count] = fopen(filename, mode);
 
 	free(filename);
 	free(mode);
 
-	return file;
+	return file_count++;
 }
-int auxfclose(int file) {
-	fclose((FILE*) file);
+void auxfputc(int file, int c) {
+	fputc(c, files[file]);
+}
+int auxfgetc(int file) {
+	return fgetc(files[file]);
+}
+void auxfclose(int file) {
+	fclose(files[file]);
 }
 
 
@@ -2326,12 +2333,25 @@ void *interpreter(void *pcPnt)
 				mem[x] = auxfopen(filename_addr, mode_addr);
 			}
 				break;
-			case FCLOSEC:
+			case FPUTCC:
 			{
-				FILE* file = (FILE*) mem[x--];
-				auxfclose(file);
+				int file = mem[x--];
+				int ch = mem[x--];
+
+				auxfputc(ch, file);
+			}
+			case FGETCC:
+			{
+				int file = mem[x];
+
+				mem[x] = auxfgetc(file);
 			}
 				break;
+			case FCLOSEC:
+			{
+				int file = mem[x--];
+				auxfclose(file);
+			}
 			default:
 				runtimeerr(wrong_kop, mem[pc - 1], numTh);
 		}
