@@ -383,7 +383,7 @@ void auxget(int beg, int t)
 }
 
 char* rucstr_to_cstr(int* arr, int len) {
-	char* str = malloc(sizeof(len * 2 + 2));
+	char* str = calloc(sizeof(char), (len * 2 + 2));
 	int j = 0;
 
 	for(int i = 0; i < len; i++) {
@@ -421,7 +421,7 @@ int auxfopen(int filename_addr, int mode_addr) {
 
 	return file_count++;
 }
-void auxfputc(int file, int c) {
+void auxfputc(int c, int file) {
 	fputc(c, files[file]);
 }
 int auxfgetc(int file) {
