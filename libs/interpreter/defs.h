@@ -33,6 +33,7 @@
 #define MAXMEMTHREAD							MAXMEMSIZE / NUMOFTHREADS
 #define MAXPRINTFPARAMS							20
 
+#define MAXFILES 100
 
 // modetab
 
