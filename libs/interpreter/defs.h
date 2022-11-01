@@ -303,6 +303,10 @@
 #define ICONC									9587
 #define UPBC									9588
 
+#define FOPENC 9700
+#define FCLOSEC 9701
+#define FPUTCC 9702
+#define FGETCC 9703
 
 // Лексемы
 
