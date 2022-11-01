@@ -420,6 +420,9 @@ int auxfopen(int filename_addr, int mode_addr) {
 
 	return file;
 }
+int auxfclose(int file) {
+	fclose((FILE*) file);
+}
 
 
 int check_zero_int(int r)
@@ -2321,6 +2324,12 @@ void *interpreter(void *pcPnt)
 				int filename_addr = mem[x];
 
 				mem[x] = auxfopen(filename_addr, mode_addr);
+			}
+				break;
+			case FCLOSEC:
+			{
+				FILE* file = (FILE*) mem[x--];
+				auxfclose(file);
 			}
 				break;
 			default:
