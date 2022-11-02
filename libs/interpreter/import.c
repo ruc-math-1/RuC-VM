@@ -457,7 +457,7 @@ int auxfgetc(int file)
 	{
 		unsigned char c1 = fgetc(files[file]);
 
-		int val = ((int) (c & 0b00011111 << 6)) | (c1 & 0b00111111);
+		int val = ((int) ((c & 0b00011111) << 6)) | (c1 & 0b00111111);
 
 		return val;
 	}
