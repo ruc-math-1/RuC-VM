@@ -310,6 +310,9 @@
 #define FGETCC 9592
 #define FPRINTFC 9593
 
+#define PUTCC 9594
+#define GETCC 9595
+
 // Лексемы
 
 #define COMMA									100
