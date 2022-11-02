@@ -382,11 +382,14 @@ void auxget(int beg, int t)
 	}
 }
 
-char* rucstr_to_cstr(int* arr, int len) {
+
+char* rucstr_to_cstr(int* arr, int len) 
+{
 	char* str = calloc(sizeof(char), (len * 2 + 2));
 	int j = 0;
 
-	for(int i = 0; i < len; i++) {
+	for(int i = 0; i < len; i++) 
+	{
 		int wchar = arr[i];
 
 		if (wchar < 128)
@@ -404,7 +407,25 @@ char* rucstr_to_cstr(int* arr, int len) {
 	}
 	return str;
 }
-int auxfopen(int filename_addr, int mode_addr) {
+char* rucchar_to_cstr(int wchar) 
+{
+	char* str = calloc(sizeof(char), 3);
+	if (wchar < 128)
+	{
+		str[0] = (char) wchar;
+	}
+	else
+	{
+		unsigned char first = (wchar >> 6) | /*0b11000000*/ 0xC0;
+		unsigned char second = (wchar & /*0b111111*/ 0x3F) | /*0b10000000*/ 0x80;
+
+		str[0] = first;
+		str[1] = second;
+	}
+	return str;
+}
+int auxfopen(int filename_addr, int mode_addr) 
+{
 	int filename_len = mem[filename_addr - 1];
 	int mode_len = mem[mode_addr - 1];
 
@@ -421,11 +442,25 @@ int auxfopen(int filename_addr, int mode_addr) {
 
 	return file_count++;
 }
-void auxfputc(int c, int file) {
-	fputc(c, files[file]);
+void auxfputc(int c, int file) 
+{
+	char* s = rucchar_to_cstr(c);
+	fputs(s, files[file]);
+	free(s);
 }
-int auxfgetc(int file) {
-	return fgetc(files[file]);
+int auxfgetc(int file) 
+{
+	unsigned char c = fgetc(files[file]);
+	if (c < 128)
+		return c;
+	else 
+	{
+		unsigned char c1 = fgetc(files[file]);
+
+		int val = ((int) (c & 0b00011111 << 6)) | (c1 & 0b00111111);
+
+		return val;
+	}
 }
 void auxfclose(int file) {
 	fclose(files[file]);
