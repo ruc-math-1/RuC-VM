@@ -529,6 +529,24 @@ void auxfprintf(int file, int strbeg, int databeg)
 	fflush(f);
 }
 
+void auxputc(int c) 
+{
+	puts(rucchar_to_cstr(c));
+}
+int auxgetc() 
+{
+	unsigned char c = getc(stdin);
+	if (c < 128)
+		return c;
+	else 
+	{
+		unsigned char c1 = getc(stdin);
+
+		int val = ((int) ((c & 0b00011111) << 6)) | (c1 & 0b00111111);
+
+		return val;
+	}
+}
 
 int check_zero_int(int r)
 {
@@ -2464,6 +2482,18 @@ void *interpreter(void *pcPnt)
 
 				auxfprintf(file, strbeg, x -= sumsize);
 				sem_post(sempr);
+			}
+				break;
+			case PUTCC:
+			{
+				int ch = mem[x--];
+
+				auxputc(ch);
+			}
+				break;
+			case GETCC:
+			{
+				mem[x] = auxgetc();
 			}
 				break;
 			default:
