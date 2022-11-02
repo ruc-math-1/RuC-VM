@@ -452,7 +452,9 @@ int auxfgetc(int file)
 {
 	unsigned char c = fgetc(files[file]);
 	if (c < 128)
+	{
 		return c;
+	}
 	else 
 	{
 		unsigned char c1 = fgetc(files[file]);
@@ -462,8 +464,69 @@ int auxfgetc(int file)
 		return val;
 	}
 }
-void auxfclose(int file) {
+void auxfclose(int file) 
+{
 	fclose(files[file]);
+}
+void auxfprintf(int file, int strbeg, int databeg)
+{
+	FILE* f = files[file];
+
+	int i;
+	int j;
+	int curdata = databeg + 1;
+	int strend = strbeg+mem[strbeg-1];
+
+	for (i = strbeg; i < strend; ++i)
+	{
+		if (mem[i] == '%')
+		{
+			switch (mem[++i])
+			{
+				case 'i':
+				case 1094:	// ц
+					fprintf(f, "%i", mem[curdata++]);
+					break;
+
+				case 'c':
+				case 1083:	// л
+					fprintf_char(f, mem[curdata++]);
+					break;
+
+				case 'f':
+				case 1074:	// в
+				{
+					fprintf(f, "%lf", *((double *)(&mem[curdata])));
+					curdata += 2;
+				}
+					break;
+
+				case 's':
+				case 1089:	// с
+				{
+					for (j = mem[curdata]; j - mem[curdata] < mem[mem[curdata] - 1]; ++j)
+					{
+						fprintf_char(f, mem[j]);
+					}
+					curdata++;
+				}
+					break;
+
+				case '%':
+					fprintf(f, "%%");
+					break;
+
+				default:
+					break;
+			}
+		}
+		else
+		{
+			fprintf_char(f, mem[i]);
+		}
+	}
+
+	fflush(f);
 }
 
 
@@ -2387,6 +2450,20 @@ void *interpreter(void *pcPnt)
 			{
 				int file = mem[x--];
 				auxfclose(file);
+			}
+				break;
+			case FPRINTFC:
+			{
+				int sumsize, strbeg;
+
+				sem_wait(sempr);
+				sumsize = mem[pc++];
+
+				int file = mem[x--];
+				strbeg = mem[x--];
+
+				auxfprintf(file, strbeg, x -= sumsize);
+				sem_post(sempr);
 			}
 				break;
 			default:
