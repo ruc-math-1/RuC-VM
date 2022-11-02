@@ -308,6 +308,7 @@
 #define FCLOSEC 9590
 #define FPUTCC 9591
 #define FGETCC 9592
+#define FPRINTFC 9593
 
 // Лексемы
 
