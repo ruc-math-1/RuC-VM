@@ -185,7 +185,6 @@ int t_createDetached(void *(*func)(void *))
 
 void t_exit()
 {
-	printf("t_exit()\n");
 	pthread_exit(NULL);
 }
 
