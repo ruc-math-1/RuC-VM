@@ -82,7 +82,7 @@ char sem_print[] = "sem_print", sem_debug[] = "sem_debug";
 sem_t *sempr, *semdeb;
 
 FILE* files[MAXFILES];
-int file_count = 0;
+int file_count = 1;
 
 #ifdef ROBOT
 FILE *f1, *f2;	// файлы цифровых датчиков
@@ -439,6 +439,9 @@ int auxfopen(int filename_addr, int mode_addr)
 
 	free(filename);
 	free(mode);
+
+	if (files[file_count] == NULL) 
+		return 0;
 
 	return file_count++;
 }
