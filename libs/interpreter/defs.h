@@ -313,6 +313,9 @@
 #define PUTCC 9594
 #define GETCC 9595
 
+#define FFLUSHC 9596
+#define DOUBLE_TO_NUMRC 9597
+
 // Лексемы
 
 #define COMMA									100

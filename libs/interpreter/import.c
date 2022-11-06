@@ -547,6 +547,12 @@ int auxgetc()
 		return val;
 	}
 }
+void auxfflush(int file)
+{
+	FILE *f = files[file];
+
+	fflush(f);
+}
 
 int check_zero_int(int r)
 {
@@ -2494,6 +2500,27 @@ void *interpreter(void *pcPnt)
 			case GETCC:
 			{
 				mem[x] = auxgetc();
+			}
+				break;
+			case FFLUSHC:
+			{
+				int file = mem[x--];
+
+				auxfflush(file);
+			}
+				break;
+			case DOUBLE_TO_NUMRC:
+			{
+				double *tempnumr = NULL;
+				// указатель на структуру
+				memcpy(&tempnumr, &mem[x - 3], sizeof(double));
+
+				double *tempdouble = NULL;
+				// указатель на double
+				memcpy(&tempdouble, &mem[x - 1], sizeof(double));
+				
+				memcpy(tempnumr, tempdouble, sizeof(double));
+				x -= 4;
 			}
 				break;
 			default:
