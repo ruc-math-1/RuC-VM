@@ -2511,16 +2511,14 @@ void *interpreter(void *pcPnt)
 				break;
 			case DOUBLE_TO_NUMRC:
 			{
-				double *tempnumr = NULL;
 				// указатель на структуру
-				memcpy(&tempnumr, &mem[x - 3], sizeof(double));
+				void *numrpointer = &mem[mem[x-1]];
 
-				double *tempdouble = NULL;
 				// указатель на double
-				memcpy(&tempdouble, &mem[x - 1], sizeof(double));
+				void *doublepointer = &mem[mem[x]];
 				
-				memcpy(tempnumr, tempdouble, sizeof(double));
-				x -= 4;
+				memcpy(numrpointer, doublepointer, sizeof(double));
+				x -= 2;
 			}
 				break;
 			default:
