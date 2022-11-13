@@ -17,18 +17,18 @@
 #ifndef H_DEFS
 #define H_DEFS
 
-#define MAXREPRTAB								500000
-#define MAXIDENTAB								500000
-#define MAXTREESIZE								500000
-#define MAXMODETAB								50000
-#define MAXBOUNDS								5000
-#define FUNCSIZE								5000
-#define SOURCESIZE								50000
-#define LINESSIZE								500
-#define MAXSTRINGL								256
-#define INIPROSIZE								100
+#define MAXREPRTAB								5000000
+#define MAXIDENTAB								5000000
+#define MAXTREESIZE								5000000
+#define MAXMODETAB								5000000
+#define MAXBOUNDS								500000
+#define FUNCSIZE								500000
+#define SOURCESIZE								500000
+#define LINESSIZE								500000
+#define MAXSTRINGL								500000
+#define INIPROSIZE								50000
 
-#define MAXMEMSIZE								10000000
+#define MAXMEMSIZE								500000000
 #define NUMOFTHREADS							5
 #define MAXMEMTHREAD							MAXMEMSIZE / NUMOFTHREADS
 #define MAXPRINTFPARAMS							20
