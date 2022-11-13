@@ -2506,7 +2506,6 @@ void *interpreter(void *pcPnt)
 			{
 				int b = mem[x--];
 				int a = mem[x--];
-				printf("debug %d %d\n", a, b);
 				memcpy(&(mem[a]), &(mem[b]), sizeof(double));
 			}
 				break;
