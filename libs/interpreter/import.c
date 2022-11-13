@@ -2480,10 +2480,13 @@ void *interpreter(void *pcPnt)
 				sem_wait(sempr);
 				sumsize = mem[pc++];
 
-				int file = mem[x--];
 				strbeg = mem[x--];
+				x -= sumsize;
+				// databeg сдвинут на 1 слово влево от реального места хранения аргументов в памяти.
+				int databeg = x;
+				int file = mem[x--];
 
-				auxfprintf(file, strbeg, x -= sumsize);
+				auxfprintf(file, strbeg, databeg);
 				sem_post(sempr);
 			}
 				break;
