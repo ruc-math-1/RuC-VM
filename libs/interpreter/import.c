@@ -2502,6 +2502,14 @@ void *interpreter(void *pcPnt)
 				mem[x] = auxgetc();
 			}
 				break;
+			case DTONUMRC:
+			{
+				int b = mem[x--];
+				int a = mem[x--];
+				printf("debug %d %d\n", a, b);
+				memcpy(&(mem[a]), &(mem[b]), sizeof(double));
+			}
+				break;
 			default:
 				runtimeerr(wrong_kop, mem[pc - 1], numTh);
 		}

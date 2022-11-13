@@ -313,6 +313,8 @@
 #define PUTCC 9594
 #define GETCC 9595
 
+#define DTONUMRC 9597
+
 // Лексемы
 
 #define COMMA									100
