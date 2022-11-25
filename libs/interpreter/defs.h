@@ -26,7 +26,7 @@
 #define SOURCESIZE								500000
 #define LINESSIZE								500000
 #define MAXSTRINGL								500000
-#define INIPROSIZE								50000
+#define INIPROSIZE								500000
 
 #define MAXMEMSIZE								500000000
 #define NUMOFTHREADS							5

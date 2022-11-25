@@ -83,6 +83,7 @@ sem_t *sempr, *semdeb;
 
 FILE* files[MAXFILES];
 int file_count = 1;
+int _pc;
 
 #ifdef ROBOT
 FILE *f1, *f2;	// файлы цифровых датчиков
@@ -109,6 +110,17 @@ int szof(int type)
 						: 1;
 }
 
+void inspect_memory(int p, int chunk_size) {
+	printf("Program memory inspection:");
+	for(int i = p - p % 8; i < p + chunk_size; i++) {
+		if (i % 8 == 0) {
+			printf("\n%d\t:\t", i);
+		}
+		printf("%08d \t", mem[i]);
+	}
+	printf("\n");
+}
+
 void runtimeerr(int e, int i, int r)
 {
 	switch (e)
@@ -118,6 +130,8 @@ void runtimeerr(int e, int i, int r)
 			break;
 		case wrong_kop:
 			printf(" команду %i я пока не реализовал; номер нити = %i\n", i, r);
+			printf(" указатель %i %i\n", mem[_pc - 1], _pc - 1);
+			inspect_memory(_pc - 8, 32);
 			break;
 		case wrong_arr_init:
 			printf(" массив с %i элементами инициализируется %i значениями\n", i, r);
@@ -842,11 +856,15 @@ void *interpreter(void *pcPnt)
 				prtype = identab[i + 2];
 				r = identab[i + 1] + 2;		// ссылка на reprtab
 
+				printf("Variable ");
+
 				do
 				{
 					printf_char(reprtab[r++]);
 				}
 				while (reprtab[r] != 0);
+
+				printf(" Addr: %i Value: ", i);
 
 				if (prtype > 0 && modetab[prtype] == MARRAY && modetab[prtype + 1] > 0)
 				{
@@ -1676,10 +1694,10 @@ void *interpreter(void *pcPnt)
 				i = mem[x--];	// index
 				r = mem[x];		// array
 
-				if (i < 0 || i >= mem[r - 1])
-				{
-					runtimeerr(index_out_of_range, i, mem[r - 1]);
-				}
+				// if (i >= mem[r - 1])
+				// {
+				//runtimeerr(index_out_of_range, i, mem[r - 1]);
+				// }
 				mem[x] = r + i * d;
 			}
 				break;
@@ -2510,7 +2528,10 @@ void *interpreter(void *pcPnt)
 			}
 				break;
 			default:
+				_pc = pc;
+				//printf("Вызывается нереализованная команда %i\n", mem[pc - 1]);
 				runtimeerr(wrong_kop, mem[pc - 1], numTh);
+				break;
 		}
 	}
 
