@@ -679,7 +679,7 @@ void *interpreter(void *pcPnt)
 
 			case EXITDIRECTC:
 			case EXITC:
-				t_exit();
+				exit(1);
 				break;
 
 			case SEMCREATEC:
